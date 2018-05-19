@@ -56,6 +56,7 @@ GLFWwindow* setupWindow()
 
 	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Asteroids", nullptr, nullptr); // Windowed
 	glfwMakeContextCurrent(window);
+	return window;
 }
 
 int main()
