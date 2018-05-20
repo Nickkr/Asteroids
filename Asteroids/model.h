@@ -5,8 +5,9 @@
 
 const float pi = acosf(-1.0f);
 const float angularVelocity = 2 * pi / (1);
-const float linearAcceleration = 0.3; // (m/s^2)
+const float linearAcceleration = 1; // (m/s^2)
 const float maxLinearVelocity = 2.0f;
+const float linearDamping = 0.8f;
 
 struct gameState {
 	vec2 shipPos = { 0, 0 };
@@ -55,6 +56,7 @@ void gameState::update(float dt)
 	}
 	vec2 shipForwardDirection = { cosf(shipHeading), sinf(shipHeading) };
 	shipPos += shipForwardDirection * shipVelocity * dt;
+	shipVelocity *= powf(linearDamping, dt);
 	
 	//when exiting map return on other side
 	if (shipPos.x < -1.0f) shipPos.x += 2.0f;
