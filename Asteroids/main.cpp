@@ -62,7 +62,7 @@ GLFWwindow* setupWindow()
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Asteroids", nullptr, nullptr); // Windowed
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Asteroids Alpha", nullptr, nullptr); // Windowed
 	glfwMakeContextCurrent(window);
 	return window;
 }
@@ -73,25 +73,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	switch (key) {
 	case GLFW_KEY_W:
 		printf("Keyboard press input: W \n");
+		state->boostingForward = (action != GLFW_RELEASE);
 		break;
 	case GLFW_KEY_A:
 		printf("Keyboard press input: A \n");
 		state->turnLeft = (action != GLFW_RELEASE);
-		if (state->turnLeft)
-		{
-			printf("turn left is true");
-		}
 		break;
 	case GLFW_KEY_S:
 		printf("Keyboard press input: S \n");
+		state->boostingBackward = (action != GLFW_RELEASE);
 		break;
 	case GLFW_KEY_D:
 		printf("Keyboard press input: D \n");
 		state->turnRight = (action != GLFW_RELEASE);
-		if (state->turnRight && !state->turnRight)
-		{ 
-			printf("turn right is true");
-		}
 		break;
 	case GLFW_KEY_SPACE:
 		printf("Keyboard press input: SPACE \n");

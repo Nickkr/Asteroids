@@ -5,14 +5,19 @@
 
 const float pi = acosf(-1.0f);
 const float angularVelocity = 2 * pi / (1);
+const float linearAcceleration = 0.3; // (m/s^2)
+const float maxLinearVelocity = 2.0f;
 
 struct gameState {
 	vec2 shipPos = { 0, 0 };
 	float shipHeading = 0;
-	float shipVelocity = 0.1;
+	float shipVelocity = 0;
 
 	bool turnLeft = false;
-	bool turnRight = false ;
+	bool turnRight = false;
+
+	bool boostingForward = false;
+	bool boostingBackward = false;
 
 	mat4x4 computeShipTransformation() const;
 
@@ -32,8 +37,30 @@ void gameState::update(float dt)
 	{
 		shipHeading -= angularVelocity * dt;
 	}
+	if (boostingForward) 
+	{
+		shipVelocity += linearAcceleration * dt; 
+	}
+	if (boostingBackward)
+	{
+		shipVelocity += -linearAcceleration * dt; 
+	}
+	if (shipVelocity >= maxLinearVelocity)
+	{
+		shipVelocity = maxLinearVelocity;
+	}
+	if (shipVelocity <= -maxLinearVelocity)
+	{
+		shipVelocity = -maxLinearVelocity;
+	}
 	vec2 shipForwardDirection = { cosf(shipHeading), sinf(shipHeading) };
 	shipPos += shipForwardDirection * shipVelocity * dt;
+	
+	//when exiting map return on other side
+	if (shipPos.x < -1.0f) shipPos.x += 2.0f;
+	if (shipPos.x > 1.0f) shipPos.x -= 2.0f;
+	if (shipPos.y < -1.0f) shipPos.y += 2.0f;
+	if (shipPos.y > 1.0f) shipPos.y -= 2.0f;
 }
 
 mat4x4 gameState::computeShipTransformation() const
