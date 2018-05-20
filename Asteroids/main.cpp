@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include <chrono>
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
@@ -12,12 +13,12 @@
 const char* vertexSource = R"glsl(
     #version 150 core
 
-    in vec2 position;
+	in vec2 position;
 
-    void main()
-    {
-        gl_Position = vec4(position, 0.0, 1.0);
-    }
+	void main()
+	{
+		gl_Position = vec4(position, 0.0, 1.0);
+	}
 )glsl";
 
 const char* fragmentSource = R"glsl(
@@ -32,9 +33,9 @@ const char* fragmentSource = R"glsl(
 )glsl";
 
 float vertices[] = {
-	0.0f,  0.5f, // Vertex 1 (X, Y)
-	0.5f, -0.5f, // Vertex 2 (X, Y)
-	-0.5f, -0.5f  // Vertex 3 (X, Y)
+	0.0f,  0.05f, // Vertex 1 (X, Y)
+	0.025f, -0.025f, // Vertex 2 (X, Y)
+	-0.025f, -0.025f  // Vertex 3 (X, Y)
 };
 
 // Check if the shader compiled without an error
@@ -104,14 +105,13 @@ int main()
 
 	// Specify the layout of the vertex data
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// Enable vertex attribute array 
 	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 
 	while (!glfwWindowShouldClose(window))
 	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
