@@ -3,10 +3,16 @@
 #include <math.h>
 #include "math.h"
 
+const float pi = acosf(-1.0f);
+const float angularVelocity = 2 * pi / (1);
+
 struct gameState {
 	vec2 shipPos = { 0, 0 };
 	float shipHeading = 0;
-	float shipVelocity = 1;
+	float shipVelocity = 0.1;
+
+	bool turnLeft = false;
+	bool turnRight = false ;
 
 	mat4x4 computeShipTransformation() const;
 
@@ -18,6 +24,14 @@ struct gameState {
 // dt float time since last update call
 void gameState::update(float dt)
 {
+	if (turnLeft)
+	{
+		shipHeading += angularVelocity * dt;
+	}
+	if (turnRight)
+	{
+		shipHeading -= angularVelocity * dt;
+	}
 	vec2 shipForwardDirection = { cosf(shipHeading), sinf(shipHeading) };
 	shipPos += shipForwardDirection * shipVelocity * dt;
 }

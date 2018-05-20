@@ -36,9 +36,9 @@ const char* fragmentSource = R"glsl(
 )glsl";
 
 float vertices[] = {
-	0.0f,  0.05f, // Vertex 1 (X, Y)
-	0.025f, -0.025f, // Vertex 2 (X, Y)
-	-0.025f, -0.025f  // Vertex 3 (X, Y)
+	 0.05f,  0.00f, // Vertex 1 (X, Y)
+	-0.020f, 0.020f, // Vertex 2 (X, Y)
+	-0.020f, -0.020f  // Vertex 3 (X, Y)
 };
 
 // Check if the shader compiled without an error
@@ -70,28 +70,35 @@ GLFWwindow* setupWindow()
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 { 
 	gameState* state = reinterpret_cast<gameState*>(glfwGetWindowUserPointer(window));
-	if (action == GLFW_PRESS)
-	{
-		switch (key) {
-		case GLFW_KEY_W:
-			printf("Keyboard press input: W \n");
-			break;
-		case GLFW_KEY_A:
-			printf("Keyboard press input: A \n");
-			break;
-		case GLFW_KEY_S:
-			printf("Keyboard press input: S \n");
-			break;
-		case GLFW_KEY_D:
-			printf("Keyboard press input: D \n");
-			break;
-		case GLFW_KEY_SPACE:
-			printf("Keyboard press input: SPACE \n");
-			break;
-		default:
-			printf("Keyboard press input: undefined key \n");
-			break;
+	switch (key) {
+	case GLFW_KEY_W:
+		printf("Keyboard press input: W \n");
+		break;
+	case GLFW_KEY_A:
+		printf("Keyboard press input: A \n");
+		state->turnLeft = (action != GLFW_RELEASE);
+		if (state->turnLeft)
+		{
+			printf("turn left is true");
 		}
+		break;
+	case GLFW_KEY_S:
+		printf("Keyboard press input: S \n");
+		break;
+	case GLFW_KEY_D:
+		printf("Keyboard press input: D \n");
+		state->turnRight = (action != GLFW_RELEASE);
+		if (state->turnRight && !state->turnRight)
+		{ 
+			printf("turn right is true");
+		}
+		break;
+	case GLFW_KEY_SPACE:
+		printf("Keyboard press input: SPACE \n");
+		break;
+	default:
+		printf("Keyboard press input: undefined key \n");
+		break;
 	}
 
 }
@@ -144,7 +151,7 @@ int main()
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	GLint modelViewLocation = glGetAttribLocation(shaderProgram, "modelViewMatrix");
+	GLint modelViewLocation = glGetUniformLocation(shaderProgram, "modelViewMatrix");
 
 	double timeOfLastUpdate = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
