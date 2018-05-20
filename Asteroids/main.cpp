@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <chrono>
+#include "Controller.h"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
@@ -67,6 +68,8 @@ GLFWwindow* setupWindow()
 int main()
 {
 	auto window = setupWindow();
+	
+	glfwSetKeyCallback(window, key_callback);
 
 	// Initiate GLEW
 	glewExperimental = GL_TRUE; // Force GLEW to use a modern OpenGL method for checking if a function is available
