@@ -4,8 +4,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
-#include <chrono>
-#include "Controller.h"
+#include "math.h"
+#include "model.h"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
@@ -18,7 +18,7 @@ const char* vertexSource = R"glsl(
 
 	void main()
 	{
-		gl_Position = vec4(position, 0.0, 1.0);
+		gl_Position = gl_ModelViewProjectionMatrix * vec4(position, 0.0, 1.0);
 	}
 )glsl";
 
@@ -65,9 +65,40 @@ GLFWwindow* setupWindow()
 	return window;
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{ 
+	gameState* state = reinterpret_cast<gameState*>(glfwGetWindowUserPointer(window));
+	if (action == GLFW_PRESS)
+	{
+		switch (key) {
+		case GLFW_KEY_W:
+			printf("Keyboard press input: W \n");
+			break;
+		case GLFW_KEY_A:
+			printf("Keyboard press input: A \n");
+			break;
+		case GLFW_KEY_S:
+			printf("Keyboard press input: S \n");
+			break;
+		case GLFW_KEY_D:
+			printf("Keyboard press input: D \n");
+			break;
+		case GLFW_KEY_SPACE:
+			printf("Keyboard press input: SPACE \n");
+			break;
+		default:
+			printf("Keyboard press input: undefined key \n");
+			break;
+		}
+	}
+
+}
+
 int main()
 {
+	gameState state;
 	auto window = setupWindow();
+	glfwSetWindowUserPointer(window, &state);
 	
 	glfwSetKeyCallback(window, key_callback);
 
@@ -111,13 +142,24 @@ int main()
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-
+	double timeOfLastUpdate = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
 	{
+		glfwPollEvents();
+
+		//check time elapsed since last update call
+		double currentUpdateTime = glfwGetTime();
+		float dt = static_cast<float>(timeOfLastUpdate - currentUpdateTime);
+		timeOfLastUpdate = currentUpdateTime;
+
+		//update game state
+		state.update( dt );
+
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		mat4x4 shipTransform = state.computeShipTransformation();
+		glLoadMatrixf(&shipTransform._00);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
-		glfwPollEvents();
 	}
 
 	glfwTerminate();
