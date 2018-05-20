@@ -14,11 +14,13 @@
 const char* vertexSource = R"glsl(
     #version 150 core
 
+	uniform mat4 modelViewMatrix;
+
 	in vec2 position;
 
 	void main()
 	{
-		gl_Position = gl_ModelViewProjectionMatrix * vec4(position, 0.0, 1.0);
+		gl_Position = modelViewMatrix * vec4(position, 0.0, 1.0);
 	}
 )glsl";
 
@@ -142,14 +144,20 @@ int main()
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
+	GLint modelViewLocation = glGetAttribLocation(shaderProgram, "modelViewMatrix");
+
 	double timeOfLastUpdate = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
 	{
+		// clear screen to black
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		glfwPollEvents();
 
 		//check time elapsed since last update call
 		double currentUpdateTime = glfwGetTime();
-		float dt = static_cast<float>(timeOfLastUpdate - currentUpdateTime);
+		float dt = static_cast<float>(currentUpdateTime - timeOfLastUpdate);
 		timeOfLastUpdate = currentUpdateTime;
 
 		//update game state
@@ -157,10 +165,18 @@ int main()
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		mat4x4 shipTransform = state.computeShipTransformation();
-		glLoadMatrixf(&shipTransform._00);
+		glUniformMatrix4fv(modelViewLocation, 1, false, &shipTransform._00);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
 	}
+
+	glDeleteProgram(shaderProgram);
+	glDeleteShader(fragmentShader);
+	glDeleteShader(vertexShader);
+
+	glDeleteBuffers(1, &vbo);
+
+	glDeleteVertexArrays(1, &vao);
 
 	glfwTerminate();
 

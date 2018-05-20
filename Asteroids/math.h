@@ -22,7 +22,7 @@ vec2 operator+(vec2 a, vec2 b)
 
 vec2& operator+=(vec2& lhs, vec2 rhs)
 {
-	return { lhs = lhs + rhs };
+	return lhs = lhs + rhs;
 }
 
 struct mat4x4 {
