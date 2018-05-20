@@ -1,4 +1,6 @@
+// Link statically with GLEW
 #define GLEW_STATIC
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
@@ -6,6 +8,7 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
+// Shader sources
 const char* vertexSource = R"glsl(
     #version 150 core
 
@@ -29,11 +32,12 @@ const char* fragmentSource = R"glsl(
 )glsl";
 
 float vertices[] = {
-	0.0f,  0.25f, // Vertex 1 (X, Y)
-	0.25f, -0.25f, // Vertex 2 (X, Y)
-	-0.25f, -0.25f  // Vertex 3 (X, Y)
+	0.0f,  0.5f, // Vertex 1 (X, Y)
+	0.5f, -0.5f, // Vertex 2 (X, Y)
+	-0.5f, -0.5f  // Vertex 3 (X, Y)
 };
 
+// Check if the shader compiled without an error
 void shaderCompileCheck(GLuint shader)
 {
 	GLint status;
@@ -63,46 +67,46 @@ int main()
 {
 	auto window = setupWindow();
 
+	// Initiate GLEW
 	glewExperimental = GL_TRUE; // Force GLEW to use a modern OpenGL method for checking if a function is available
 	glewInit();
 
-	//vertex buffer
+	// Create Vertex Array Object
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	// Create a Vertex Buffer Object and copy the vertex data to it
 	GLuint vbo;
 	glGenBuffers(1, &vbo); // Generate 1 buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	//compile vertex shader
+	// Create and compile the vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
 	glCompileShader(vertexShader);
 	shaderCompileCheck(vertexShader);
 
-	//compile fragment shader
+	// Create and compile the fragment shader
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
 	glCompileShader(fragmentShader);
 	shaderCompileCheck(fragmentShader);
 
-	//combine shaders into a program
+	// Link the vertex and fragment shader into a shader program
 	GLuint shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
-	
-	//link and use program
 	glLinkProgram(shaderProgram);
 	glUseProgram(shaderProgram);
 
-	//VAOs store all of the links between the attributes and your VBOs with raw vertex data
-	GLuint vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
 
-	//Making the link between vertex data and attributes
+	// Specify the layout of the vertex data
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	//enable vertex attribute array 
+	// Enable vertex attribute array 
 	glEnableVertexAttribArray(posAttrib);
 
 
