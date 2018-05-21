@@ -98,7 +98,7 @@ GLFWwindow* setupWindow()
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Asteroids Alpha", nullptr, nullptr); // Windowed
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Asteroids", nullptr, nullptr); // Windowed
 	glfwMakeContextCurrent(window);
 	return window;
 }

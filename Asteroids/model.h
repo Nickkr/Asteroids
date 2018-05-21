@@ -6,7 +6,7 @@
 const float pi = acosf(-1.0f);
 const float angularVelocity = 2 * pi / (1);
 const float linearAcceleration = 1; // (m/s^2)
-const float maxLinearVelocity = 2.0f;
+const float maxLinearVelocity = 1.0f;
 const float linearDamping = 0.8f;
 
 struct gameState 
@@ -87,7 +87,7 @@ void gameState::update(float dt)
 	//UFO
 	ufoHeading = angularVelocity * dt;
 	vec2 ufoForwardDirection = { cosf(ufoHeading), sinf(ufoHeading) };
-	ufoPos += ufoForwardDirection * (maxLinearVelocity / 6) * dt;
+	ufoPos += ufoForwardDirection * (maxLinearVelocity / 3) * dt;
 	//when exiting map return on other side
 	if (ufoPos.x < -1.0f) ufoPos.x += 2.0f;
 	if (ufoPos.x > 1.0f) ufoPos.x -= 2.0f;
