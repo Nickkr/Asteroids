@@ -7,6 +7,7 @@
 #include "math.h"
 #include "model.h"
 
+
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
@@ -35,11 +36,28 @@ const char* fragmentSource = R"glsl(
 	}
 )glsl";
 
-float vertices[] = {
+float vertices[] = 
+{
 	 0.05f,  0.00f, // Vertex 1 (X, Y)
 	-0.020f, 0.020f, // Vertex 2 (X, Y)
 	-0.020f, -0.020f  // Vertex 3 (X, Y)
 };
+
+//asteroid vertices
+float vertices2[] =
+{
+	0.1f,  0.35f, 
+	0.10f, 0.15f, 
+	0.3f, 0.15f,
+	0.3f, -0.1f,
+	0.1f, -0.1f,
+	0.1f,  -0.25f,
+	-0.15f, -0.25f,
+	-0.3f, -0.1f,
+	-0.3f, 0.1f,
+	-0.2f, 0.3f
+};
+
 
 // Check if the shader compiled without an error
 void shaderCompileCheck(GLuint shader)
@@ -109,16 +127,31 @@ int main()
 	glewExperimental = GL_TRUE; // Force GLEW to use a modern OpenGL method for checking if a function is available
 	glewInit();
 
+	//SHIP OBJECT
 	// Create Vertex Array Object
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
-
 	// Create a Vertex Buffer Object and copy the vertex data to it
 	GLuint vbo;
 	glGenBuffers(1, &vbo); // Generate 1 buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	//ASTEROID OBJECT
+	GLuint asteroidvao;
+	glGenVertexArrays(1, &asteroidvao);
+	glBindVertexArray(asteroidvao);
+	// Create a Vertex Buffer Object and copy the vertex data to it
+	GLuint asteroidvbo;
+	glGenBuffers(1, &asteroidvbo); // Generate 1 buffer
+	glBindBuffer(GL_ARRAY_BUFFER, asteroidvbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// Create and compile the vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -146,7 +179,6 @@ int main()
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	GLint modelViewLocation = glGetUniformLocation(shaderProgram, "modelViewMatrix");
-
 	double timeOfLastUpdate = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
 	{
@@ -163,11 +195,18 @@ int main()
 
 		//update game state
 		state.update( dt );
-
+		glBindVertexArray(vao);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		mat4x4 shipTransform = state.computeShipTransformation();
 		glUniformMatrix4fv(modelViewLocation, 1, false, &shipTransform._00);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		//draw 2
+		mat4x4 asteroidTransform = state.computeAsteroidTransformation();
+		glUniformMatrix4fv(modelViewLocation, 1, false, &asteroidTransform._00);
+		glBindVertexArray(asteroidvao);
+		glDrawArrays(GL_LINE_LOOP, 0, 10);
+
 		glfwSwapBuffers(window);
 	}
 

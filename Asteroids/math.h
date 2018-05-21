@@ -25,7 +25,8 @@ vec2& operator+=(vec2& lhs, vec2 rhs)
 	return lhs = lhs + rhs;
 }
 
-struct mat4x4 {
+struct mat4x4 
+{
 	//row_column
 	float _00;
 	float _10;
