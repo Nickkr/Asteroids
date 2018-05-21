@@ -16,7 +16,8 @@ struct gameState
 	float shipVelocity = 0;
 
 	vec2 asteroidPos = { 0,0 };
-	float asteroidHeading = 0;
+	float asteroidHeading = 1;
+	float asteroidTravelHeading = 30 / 180.0f * pi;
 
 	bool turnLeft = false;
 	bool turnRight = false;
@@ -70,9 +71,9 @@ void gameState::update(float dt)
 	if (shipPos.y > 1.0f) shipPos.y -= 2.0f;
 
 	//asteroid
-	asteroidHeading = angularVelocity * dt * 2;
-	vec2 asteroidForwardDirection = { cosf(asteroidHeading), sinf(asteroidHeading) };
-	asteroidPos += asteroidForwardDirection * (maxLinearVelocity / 2) * dt;
+	asteroidHeading += angularVelocity / 30  * dt;
+	vec2 asteroidForwardDirection = { cosf(asteroidTravelHeading), sinf(asteroidTravelHeading) };
+	asteroidPos += asteroidForwardDirection * (maxLinearVelocity / 3) * dt;
 	//when exiting map return on other side
 	if (asteroidPos.x < -1.0f) asteroidPos.x += 2.0f;
 	if (asteroidPos.x > 1.0f) asteroidPos.x -= 2.0f;
@@ -82,12 +83,13 @@ void gameState::update(float dt)
 
 mat4x4 gameState::computeAsteroidTransformation() const
 {
+	const float scale = 0.3f;
 	mat4x4 m = { 0 };
 	// 2d rotation 
-	m._00 = cosf(asteroidHeading);
-	m._11 = cosf(asteroidHeading);
-	m._01 = -sinf(asteroidHeading);
-	m._10 = sinf(asteroidHeading);
+	m._00 = scale * cosf(asteroidHeading);
+	m._11 = scale * cosf(asteroidHeading);
+	m._01 = scale * -sinf(asteroidHeading);
+	m._10 = scale * sinf(asteroidHeading);
 
 	// homogene coords 
 	m._33 = 1;
