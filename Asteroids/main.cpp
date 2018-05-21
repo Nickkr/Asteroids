@@ -9,7 +9,7 @@
 
 
 #define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_HEIGHT 800
 
 // Shader sources
 const char* vertexSource = R"glsl(
@@ -89,20 +89,24 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 { 
 	gameState* state = reinterpret_cast<gameState*>(glfwGetWindowUserPointer(window));
 	switch (key) {
+	case GLFW_KEY_UP:
 	case GLFW_KEY_W:
-		printf("Keyboard press input: W \n");
+		printf("Keyboard press input: W / UP \n");
 		state->boostingForward = (action != GLFW_RELEASE);
 		break;
+	case GLFW_KEY_LEFT:
 	case GLFW_KEY_A:
-		printf("Keyboard press input: A \n");
+		printf("Keyboard press input: A / LEFT \n");
 		state->turnLeft = (action != GLFW_RELEASE);
 		break;
+	case GLFW_KEY_DOWN:
 	case GLFW_KEY_S:
-		printf("Keyboard press input: S \n");
+		printf("Keyboard press input: S / DOWN \n");
 		state->boostingBackward = (action != GLFW_RELEASE);
 		break;
+	case GLFW_KEY_RIGHT:
 	case GLFW_KEY_D:
-		printf("Keyboard press input: D \n");
+		printf("Keyboard press input: D/ RIGHT \n");
 		state->turnRight = (action != GLFW_RELEASE);
 		break;
 	case GLFW_KEY_SPACE:
