@@ -139,6 +139,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int main()
 {
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	gameState state;
 	auto window = setupWindow();
 	glfwSetWindowUserPointer(window, &state);
@@ -214,6 +215,12 @@ int main()
 
 	GLint modelViewLocation = glGetUniformLocation(shaderProgram, "modelViewMatrix");
 	double timeOfLastUpdate = glfwGetTime();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_LINE_SMOOTH);
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		// clear screen to black
