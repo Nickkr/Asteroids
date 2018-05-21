@@ -58,6 +58,24 @@ float vertices2[] =
 	-0.2f, 0.3f
 };
 
+//UFO vertices
+float vertices3[] =
+{
+	-1.0f,  -1.0f,
+	1.0f, -1.0f,
+	3.0f, 0.0f,
+	-3.0f, 0.0f,
+	-1.0f, -1.0f,
+	-3.0f, 0.0f,
+	-1.0f, 1.0f,
+	1.0f,  1.0f,
+	3.0f, 0.0f,
+	1.0f,  1.0f,
+	0.5f, 2.0f,
+	-0.5f, 2.0f,
+	-1.0f, 1.0f
+};
+
 
 // Check if the shader compiled without an error
 void shaderCompileCheck(GLuint shader)
@@ -157,6 +175,18 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
+	//UFO OBJECT
+	GLuint ufovao;
+	glGenVertexArrays(1, &ufovao);
+	glBindVertexArray(ufovao);
+	// Create a Vertex Buffer Object and copy the vertex data to it
+	GLuint ufovbo;
+	glGenBuffers(1, &ufovbo); // Generate 1 buffer
+	glBindBuffer(GL_ARRAY_BUFFER, ufovbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices3), vertices3, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
 	// Create and compile the vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
@@ -205,11 +235,17 @@ int main()
 		glUniformMatrix4fv(modelViewLocation, 1, false, &shipTransform._00);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		//draw 2
+		//draw asteroid
 		mat4x4 asteroidTransform = state.computeAsteroidTransformation();
 		glUniformMatrix4fv(modelViewLocation, 1, false, &asteroidTransform._00);
 		glBindVertexArray(asteroidvao);
 		glDrawArrays(GL_LINE_LOOP, 0, 10);
+
+		//draw ufo
+		mat4x4 ufoTransform = state.computeUfoTransformation();
+		glUniformMatrix4fv(modelViewLocation, 1, false, &ufoTransform._00);
+		glBindVertexArray(ufovao);
+		glDrawArrays(GL_LINE_STRIP, 0, 13);
 
 		glfwSwapBuffers(window);
 	}
