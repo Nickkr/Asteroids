@@ -26,27 +26,27 @@ struct mat4x4
 	float _33;
 };
 
-vec2 operator*(vec2 v, float s)
+inline vec2 operator*(vec2 v, float s)
 {
 	return { s * v.x, s* v.y };
 }
 
-vec2 operator*(float s, vec2 v)
+inline vec2 operator*(float s, vec2 v)
 {
 	return v * s ;
 }
 
-vec2 operator+(vec2 a, vec2 b)
+inline vec2 operator+(vec2 a, vec2 b)
 {
 	return { a.x + b.x, a.y + b.y };
 }
 
-vec2& operator+=(vec2& lhs, vec2 rhs)
+inline vec2& operator+=(vec2& lhs, vec2 rhs)
 {
 	return lhs = lhs + rhs;
 }
 
-vec2 operator*(mat4x4 M, vec2 v)
+inline vec2 operator*(mat4x4 M, vec2 v)
 {
 	//TODO
 	return v;
