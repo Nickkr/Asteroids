@@ -36,18 +36,36 @@ const char* fragmentSource = R"glsl(
 	}
 )glsl";
 
-float vertices[] = 
+float vertices[] =
 {
-	 0.05f,  0.00f, // Vertex 1 (X, Y)
-	-0.020f, 0.020f, // Vertex 2 (X, Y)
-	-0.020f, -0.020f  // Vertex 3 (X, Y)
+	0.5f,  0.00f, // Vertex 1 (X, Y)
+	-0.20f, 0.20f, // Vertex 2 (X, Y)
+	-0.20f, -0.20f  // Vertex 3 (X, Y)
 };
 
+float shipAcceleratingVertices[] =
+{
+	0.5f,  0.00f, // Vertex 1 (X, Y)
+	-0.20f, 0.20f, // Vertex 2 (X, Y)
+	-0.40f, 0.20f,
+	-0.20f, 0.20f,
+	-0.2f, 0.1f,
+	-0.4f, 0.1f,
+	-0.2f, 0.1f,
+	-0.2f, -0.1f,
+	-0.4f, -0.1f,
+	-0.2f, -0.1f,
+	-0.2f, -0.2f,
+	-0.4f, -0.2f,
+	-0.2f, -0.2f,
+	0.5f,  0.00f// Vertex 3 (X, Y)
+
+};
 //asteroid vertices
 float vertices2[] =
 {
-	0.1f,  0.35f, 
-	0.10f, 0.15f, 
+	0.1f,  0.35f,
+	0.10f, 0.15f,
 	0.3f, 0.15f,
 	0.3f, -0.1f,
 	0.1f, -0.1f,
@@ -104,7 +122,7 @@ GLFWwindow* setupWindow()
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{ 
+{
 	gameState* state = reinterpret_cast<gameState*>(glfwGetWindowUserPointer(window));
 	switch (key) {
 	case GLFW_KEY_UP:
@@ -143,14 +161,14 @@ int main()
 	gameState state;
 	auto window = setupWindow();
 	glfwSetWindowUserPointer(window, &state);
-	
+
 	glfwSetKeyCallback(window, key_callback);
 
 	// Initiate GLEW
 	glewExperimental = GL_TRUE; // Force GLEW to use a modern OpenGL method for checking if a function is available
 	glewInit();
 
-	//SHIP OBJECT
+	//SHIP standard
 	// Create Vertex Array Object
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
@@ -163,6 +181,18 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
+	//SHIP accelerating
+	// Create Vertex Array Object
+	GLuint shipacceleratingvao;
+	glGenVertexArrays(1, &shipacceleratingvao);
+	glBindVertexArray(shipacceleratingvao);
+	// Create a Vertex Buffer Object and copy the vertex data to it
+	GLuint shipacceleratingvbo;
+	glGenBuffers(1, &shipacceleratingvbo); // Generate 1 buffer
+	glBindBuffer(GL_ARRAY_BUFFER, shipacceleratingvbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(shipAcceleratingVertices), shipAcceleratingVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	//ASTEROID OBJECT
 	GLuint asteroidvao;
@@ -235,12 +265,23 @@ int main()
 		timeOfLastUpdate = currentUpdateTime;
 
 		//update game state
-		state.update( dt );
-		glBindVertexArray(vao);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		mat4x4 shipTransform = state.computeShipTransformation();
-		glUniformMatrix4fv(modelViewLocation, 1, false, &shipTransform._00);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		state.update(dt);
+		if (!(state.boostingForward || state.boostingBackward))
+		{
+			glBindVertexArray(vao);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			mat4x4 shipTransform = state.computeShipTransformation();
+			glUniformMatrix4fv(modelViewLocation, 1, false, &shipTransform._00);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		}
+		else
+		{
+			glBindVertexArray(shipacceleratingvao);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			mat4x4 shipTransform = state.computeShipTransformation();
+			glUniformMatrix4fv(modelViewLocation, 1, false, &shipTransform._00);
+			glDrawArrays(GL_LINE_STRIP, 0, 14);
+		}
 
 		//draw asteroid
 		mat4x4 asteroidTransform = state.computeAsteroidTransformation();

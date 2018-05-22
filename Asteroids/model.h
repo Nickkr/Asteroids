@@ -9,7 +9,7 @@ const float linearAcceleration = 1; // (m/s^2)
 const float maxLinearVelocity = 1.0f;
 const float linearDamping = 0.8f;
 
-struct gameState 
+struct gameState
 {
 	vec2 shipPos = { 0, 0 };
 	float shipHeading = 0;
@@ -48,13 +48,13 @@ void gameState::update(float dt)
 	{
 		shipHeading -= angularVelocity * dt;
 	}
-	if (boostingForward) 
+	if (boostingForward)
 	{
-		shipVelocity += linearAcceleration * dt; 
+		shipVelocity += linearAcceleration * dt;
 	}
 	if (boostingBackward)
 	{
-		shipVelocity += -linearAcceleration * dt; 
+		shipVelocity += -linearAcceleration * dt;
 	}
 	if (shipVelocity >= maxLinearVelocity)
 	{
@@ -75,7 +75,7 @@ void gameState::update(float dt)
 	if (shipPos.y > 1.0f) shipPos.y -= 2.0f;
 
 	//asteroid
-	asteroidHeading += angularVelocity / 30  * dt;
+	asteroidHeading += angularVelocity / 30 * dt;
 	vec2 asteroidForwardDirection = { cosf(asteroidTravelHeading), sinf(asteroidTravelHeading) };
 	asteroidPos += asteroidForwardDirection * (maxLinearVelocity / 3) * dt;
 	//when exiting map return on other side
@@ -111,7 +111,7 @@ mat4x4 gameState::computeAsteroidTransformation() const
 	// translation
 	m._03 = asteroidPos.x;
 	m._13 = asteroidPos.y;
-	
+
 	return m;
 }
 
@@ -138,12 +138,13 @@ mat4x4 gameState::computeUfoTransformation() const
 
 mat4x4 gameState::computeShipTransformation() const
 {
+	const float scale = 0.1f;
 	mat4x4 m = { 0 };
 	// 2d rotation 
-	m._00 = cosf(shipHeading);
-	m._11 = cosf(shipHeading);
-	m._01 = -sinf(shipHeading);
-	m._10 = sinf(shipHeading);
+	m._00 = scale * cosf(shipHeading);
+	m._11 = scale *cosf(shipHeading);
+	m._01 = scale * -sinf(shipHeading);
+	m._10 = scale * sinf(shipHeading);
 
 	// homogene coords 
 	m._33 = 1;
