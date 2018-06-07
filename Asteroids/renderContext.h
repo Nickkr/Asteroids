@@ -5,4 +5,5 @@
 struct renderContext
 {
 	GLuint modelViewLocation;
+	GLuint colorLocation;
 };

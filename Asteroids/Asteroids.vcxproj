@@ -128,8 +128,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="circleShape.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="fixture.cpp" />
+    <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="gameState.cpp" />
     <ClCompile Include="gameView.cpp" />
     <ClCompile Include="main.cpp" />
@@ -138,8 +140,10 @@
     <ClCompile Include="rigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="circleShape.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="fixture.h" />
+    <ClInclude Include="gameObject.h" />
     <ClInclude Include="gameView.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="gameState.h" />

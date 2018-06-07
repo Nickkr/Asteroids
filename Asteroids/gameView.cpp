@@ -3,49 +3,26 @@
 #include "collision.h"
 #include <stdio.h>
 
-
 void gameView::setup()
 {
-	shipCruisingShape.build(shipCruisingVertices);
-	shipAcceleratingShape.build(shipAcceleratingVertices);
-	asteroidShape.build(asteroidVertices);
-	ufoShape.build(ufoVertices);
-
-	ship.setBody(&state.ship);
-	ship.setShape(&shipCruisingShape);
-	ship.setScale(0.1f);
-	asteroid.setBody(&state.asteroid);
-	asteroid.setShape(&asteroidShape);
-	asteroid.setScale(0.3f);
-	ufo.setBody(&state.ufo);
-	ufo.setShape(&ufoShape);
-	ufo.setScale(0.02f);
+	shipCruisingShape.build(shipCruisingVertices, 0.1f);
+	shipAcceleratingShape.build(shipAcceleratingVertices, 0.1f);
+	asteroidShape.build(asteroidVertices, 0.3f);
+	ufoShape.build(ufoVertices, 0.02f);
 }
 
-void gameView::draw(renderContext& context, GLuint uniColor)
+void gameView::draw(renderContext& context)
 {
+	mat4x4 shipTransform = state.ship.computeTransform();
 	if (state.boostingForward || state.boostingBackward)
 	{
-		ship.setShape(&shipAcceleratingShape);
+		shipAcceleratingShape.draw(context, shipTransform, state.ship.isAlive() );
 	}
 	else
 	{
-		ship.setShape(&shipCruisingShape);
+		shipCruisingShape.draw(context, shipTransform, state.ship.isAlive() );
 	}
 
-	//change color to red when a collision between asteroid and ship occur
-	if (state.collision) {
-		glUniform3f(uniColor, 1.0f, 0.0f, 0.0f);
-		ship.draw(context);
-		asteroid.draw(context);
-		glUniform3f(uniColor, 1.0f, 1.0f, 1.0f);
-		ufo.draw(context);
-	}
-	else
-	{
-		ship.draw(context);
-		asteroid.draw(context);
-		ufo.draw(context);
-	}
-
+	asteroidShape.draw(context, state.asteroid.computeTransform(), state.asteroid.isAlive() );
+	ufoShape.draw(context, state.ufo.computeTransform(), state.ufo.isAlive() );
 }

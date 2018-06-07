@@ -13,14 +13,10 @@ public:
 	{}
 
 	void setup();
-	void draw(renderContext& context, GLuint uniColor);
+	void draw(renderContext& context);
 
 private:
 	gameState& state;
-
-	fixture ship;
-	fixture asteroid;
-	fixture ufo;
 
 	polygonShape shipCruisingShape;
 	polygonShape shipAcceleratingShape;

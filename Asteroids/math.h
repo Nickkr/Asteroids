@@ -100,3 +100,8 @@ inline float fmodfPositive(float x, float n)
 	float r = fmodf(x, n);
 	return r < 0 ? r + n : r;
 }
+
+inline float squared(float x)
+{
+	return x * x;
+}

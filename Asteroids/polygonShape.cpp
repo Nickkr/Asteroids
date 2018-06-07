@@ -12,8 +12,14 @@ polygonShape::~polygonShape()
 	}
 }
 
-void polygonShape::build(float* vertices, size_t numVertices)
+void polygonShape::build(float* vertices, size_t numVertices, float scale)
 {
+	// Pre-scale mesh
+	for (size_t i = 0; i < 2 * numVertices; ++i)
+	{
+		vertices[i] *= scale;
+	}
+
 	// Setup CPU resources
 	this->vertices = vertices;
 	this->numVertices = numVertices;
@@ -30,8 +36,18 @@ void polygonShape::build(float* vertices, size_t numVertices)
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
-void polygonShape::draw() const
+void polygonShape::draw(renderContext& context, mat4x4 const& transform, bool isAlive) const
 {
+	glUniformMatrix4fv(context.modelViewLocation, 1, false, &transform._00);
+	
+	float lineColor[] = { 1.0f, 1.0f, 1.0f };
+	if (!isAlive)
+	{
+		lineColor[0] = 1.0f;
+		lineColor[1] = 0.0f;
+		lineColor[2] = 0.0f;
+	}
+	glUniform3fv(context.colorLocation, 1, lineColor);
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

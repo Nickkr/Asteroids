@@ -2,21 +2,23 @@
 
 #include <GL/glew.h>
 #include <cstddef>
+#include "math.h"
+#include "renderContext.h"
 
 class polygonShape
 {
 public:
 	~polygonShape();
 
-	void build(float* vertices, std::size_t numVertices);
+	void build(float* vertices, std::size_t numVertices, float scale);
 
 	template <std::size_t N>
-	void build(float(&vertices)[N])
+	void build(float(&vertices)[N], float scale)
 	{
-		build(vertices, N / 2);
+		build(vertices, N / 2, scale);
 	}
 
-	void draw() const;
+	void draw(renderContext& context, mat4x4 const& transform, bool isAlive) const;
 
 private:
 	float* vertices;

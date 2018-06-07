@@ -8,6 +8,7 @@
 #include "gameState.h"
 #include "gameView.h"
 #include "fixture.h"
+#include "gameSettings.inl"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 800
@@ -91,6 +92,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	case GLFW_KEY_SPACE:
 		printf("Keyboard press input: SPACE \n");
 		break;
+	case GLFW_KEY_F1:
+		if (action != GLFW_RELEASE)
+		{
+			state->invincible = !state->invincible;
+			printf("invincibility toggled\n");
+		}
+		break;
 	default:
 		printf("Keyboard press input: undefined key \n");
 		break;
@@ -143,6 +151,7 @@ int main()
 
 	renderContext context;
 	context.modelViewLocation = glGetUniformLocation(shaderProgram, "modelViewMatrix");
+	context.colorLocation = glGetUniformLocation(shaderProgram, "inputColor");
 	double timeOfLastUpdate = glfwGetTime();
 
 	glEnable(GL_BLEND);
@@ -164,13 +173,10 @@ int main()
 		float dt = static_cast<float>(currentUpdateTime - timeOfLastUpdate);
 		timeOfLastUpdate = currentUpdateTime;
 
-		GLint uniColor = glGetUniformLocation(shaderProgram, "inputColor");
-
-
 		// update game state
-		state.update(dt * 0.6);
+		state.update(dt * gameSpeed);
 		// prepare frame
-		view.draw(context, uniColor);
+		view.draw(context);
 		// show frame
 		glfwSwapBuffers(window);
 	}

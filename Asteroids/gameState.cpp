@@ -5,50 +5,54 @@
 void gameState::setup()
 {
 	area = rect{{ -1, -1 }, { 1, 1 }};
-	ship.setLinearDamping(0.8);
-	ship.setMaxLinearVelocity(maxLinearVelocity);
+	ship.getBody()->setLinearDamping(0.8f);
+	ship.getBody()->setMaxLinearVelocity(maxLinearVelocity);
 
-	asteroid.setAngularVelocity(angularVelocity / 30);
+	asteroid.getBody()->setAngularVelocity(angularVelocity / 30);
 	vec2 asteroidForwardDirection = { cosf(asteroidTravelHeading), sinf(asteroidTravelHeading) };
-	asteroid.setLinearVelocity(asteroidForwardDirection * (maxLinearVelocity / 3));
+	asteroid.getBody()->setLinearVelocity(asteroidForwardDirection * (maxLinearVelocity / 3));
 
 	vec2 ufoForwardDirection = { cosf(ufoHeading), sinf(ufoHeading) };
-	ufo.setLinearVelocity(ufoForwardDirection * (maxLinearVelocity / 3));
+	ufo.getBody()->setLinearVelocity(ufoForwardDirection * (maxLinearVelocity / 3));
 }
 
 // dt float time since last update call
 void gameState::update(float dt)
 {
-	ship.resetForceAndTorque();
+	ship.getBody()->resetForceAndTorque();
 
 	updateControls();
 
 	if (enableMomentum)
 	{
-		ship.update(dt);
+		ship.getBody()->update(dt);
 	}
 	else
 	{
 		// Rotate the velocity vector along with the ship for snappier controls
-		float oldHeading = ship.getAngle();
-		ship.update(dt);
-		float newHeading = ship.getAngle();
+		float oldHeading = ship.getBody()->getAngle();
+		ship.getBody()->update(dt);
+		float newHeading = ship.getBody()->getAngle();
 		float rotation = newHeading - oldHeading;
-		vec2 shipVelocity = ship.getLinearVelocity();
+		vec2 shipVelocity = ship.getBody()->getLinearVelocity();
 		vec2 rotatedShipVelocity = {
-			cos(rotation) * shipVelocity.x - sin(rotation) * shipVelocity.y,
-			cos(rotation) * shipVelocity.y + sin(rotation) * shipVelocity.x
+			cosf(rotation) * shipVelocity.x - sinf(rotation) * shipVelocity.y,
+			cosf(rotation) * shipVelocity.y + sinf(rotation) * shipVelocity.x
 		};
-		ship.setLinearVelocity(rotatedShipVelocity);
+		ship.getBody()->setLinearVelocity(rotatedShipVelocity);
 	}
-	ship.confineTo(area);
+	ship.getBody()->confineTo(area);
 
-	asteroid.update(dt);
-	asteroid.confineTo(area);
+	asteroid.getBody()->update(dt);
+	asteroid.getBody()->confineTo(area);
 
-	ufo.update(dt);
-	ufo.confineTo(area);
-	this->collision = checkCollision(asteroid.getPos(), ship.getPos());
+	ufo.getBody()->update(dt);
+	ufo.getBody()->confineTo(area);
+
+	if (!invincible)
+	{
+		this->collision = checkCollision(asteroid, ship) || checkCollision(ufo, ship);
+	}
 }
 
 // TODO: Move to controller
@@ -73,10 +77,10 @@ void gameState::updateControls()
 	{
 		shipAcceleration += -linearAcceleration;
 	}
-	float shipHeading = ship.getAngle();
+	float shipHeading = ship.getBody()->getAngle();
 	vec2 shipForwardDirection = { cosf(shipHeading), sinf(shipHeading) };
 	vec2 shipForce = shipForwardDirection * shipAcceleration;
 
-	ship.applyForce(shipForce);
-	ship.setAngularVelocity(shipAngularVelocity);
+	ship.getBody()->applyForce(shipForce);
+	ship.getBody()->setAngularVelocity(shipAngularVelocity);
 }

@@ -1,4 +1,4 @@
 #pragma once
-#include "math.h"
+#include "gameObject.h"
 
-bool checkCollision(vec2 a, vec2 b);
+bool checkCollision(gameObject& a, gameObject& b);
