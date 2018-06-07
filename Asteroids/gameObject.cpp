@@ -31,14 +31,16 @@ void gameObject::onCollisionWith(gameObject& other)
 		}
 	}
 }
+
 void gameObject::respawn()
 {
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	this->revive();
 	this->getBody()->setPos({ 0,0 });
 	this->getBody()->setLinearVelocity({ 0,0 });
 	this->invincible = true;
-	printf("invincible for 2s");
-	std::this_thread::sleep_for(std::chrono::seconds(2));
+	printf("invincible for 0.5 s\n");
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	this->invincible = false;
-	printf("invincibility gone");
+	printf("invincibility gone\n");
 }
