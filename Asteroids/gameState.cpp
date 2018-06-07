@@ -11,9 +11,11 @@ void gameState::setup()
 	asteroid.getBody()->setAngularVelocity(angularVelocity / 30);
 	vec2 asteroidForwardDirection = { cosf(asteroidTravelHeading), sinf(asteroidTravelHeading) };
 	asteroid.getBody()->setLinearVelocity(asteroidForwardDirection * (maxLinearVelocity / 3));
+	asteroid.getBody()->setPos({ -1, -1 });
 
 	vec2 ufoForwardDirection = { cosf(ufoHeading), sinf(ufoHeading) };
 	ufo.getBody()->setLinearVelocity(ufoForwardDirection * (maxLinearVelocity / 3));
+	ufo.getBody()->setPos({ -0.9f , 0.5f });
 }
 
 // dt float time since last update call
@@ -48,8 +50,8 @@ void gameState::update(float dt)
 
 	ufo.getBody()->update(dt);
 	ufo.getBody()->confineTo(area);
-
-	if (!invincible)
+	
+	if (!ship.invincible)
 	{
 		this->collision = checkCollision(asteroid, ship) || checkCollision(ufo, ship);
 	}

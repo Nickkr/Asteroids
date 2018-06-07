@@ -21,7 +21,6 @@ struct gameState
 	bool boostingBackward = false;
 	
 	bool collision = false;
-	bool invincible = true;
 
 	void setup();
 	void update(float dt);

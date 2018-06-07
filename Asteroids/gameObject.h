@@ -18,7 +18,10 @@ public:
 	void onCollisionWith(gameObject& other);
 
 	void kill() { alive = false;  }
+	void revive() { alive = true; }
+	void respawn();
 	bool isAlive() const { return alive;  }
+	bool invincible = false;
 
 private:
 	gameObjectType type;
