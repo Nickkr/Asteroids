@@ -163,7 +163,7 @@ int main()
 		timeOfLastUpdate = currentUpdateTime;
 
 		// update game state
-		state.update(dt);
+		state.update(dt * 0.4);
 		// prepare frame
 		view.draw(context);
 		// show frame

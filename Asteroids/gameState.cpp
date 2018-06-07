@@ -1,5 +1,6 @@
 #include "gameState.h"
 #include "gameSettings.inl"
+#include "collision.h"
 
 void gameState::setup()
 {
@@ -47,6 +48,7 @@ void gameState::update(float dt)
 
 	ufo.update(dt);
 	ufo.confineTo(area);
+	checkCollision(asteroid.getPos(), ship.getPos());
 }
 
 // TODO: Move to controller

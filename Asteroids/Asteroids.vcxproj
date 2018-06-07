@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="collision.cpp" />
     <ClCompile Include="fixture.cpp" />
     <ClCompile Include="gameState.cpp" />
     <ClCompile Include="gameView.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="rigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="collision.h" />
     <ClInclude Include="fixture.h" />
     <ClInclude Include="gameView.h" />
     <ClInclude Include="math.h" />
