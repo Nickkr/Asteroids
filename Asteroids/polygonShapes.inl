@@ -28,10 +28,10 @@ float shipAcceleratingVertices[] =
 float asteroidVertices[] =
 {
 	0.1f,  0.35f,
-	0.10f, 0.15f,
+	//0.10f, 0.15f, currently removed extra vertices for a more collision accurate shape
 	0.3f, 0.15f,
 	0.3f, -0.1f,
-	0.1f, -0.1f,
+	//0.1f, -0.1f,
 	0.1f,  -0.25f,
 	-0.15f, -0.25f,
 	-0.3f, -0.1f,

@@ -29,11 +29,12 @@ const char* vertexSource = R"glsl(
 const char* fragmentSource = R"glsl(
     #version 150 core
 
+	uniform vec3 inputColor;
 	out vec4 outColor;
 
 	void main()
 	{
-		outColor = vec4(1.0, 1.0, 1.0, 1.0);
+		outColor = vec4(inputColor, 1.0);
 	}
 )glsl";
 
@@ -96,6 +97,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 
 }
+
 
 int main()
 {
@@ -162,10 +164,13 @@ int main()
 		float dt = static_cast<float>(currentUpdateTime - timeOfLastUpdate);
 		timeOfLastUpdate = currentUpdateTime;
 
+		GLint uniColor = glGetUniformLocation(shaderProgram, "inputColor");
+
+
 		// update game state
-		state.update(dt * 0.4);
+		state.update(dt * 0.6);
 		// prepare frame
-		view.draw(context);
+		view.draw(context, uniColor);
 		// show frame
 		glfwSwapBuffers(window);
 	}

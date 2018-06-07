@@ -19,6 +19,8 @@ struct gameState
 
 	bool boostingForward = false;
 	bool boostingBackward = false;
+	
+	bool collision = false;
 
 	void setup();
 	void update(float dt);

@@ -1,5 +1,8 @@
 #include "gameView.h"
 #include "polygonShapes.inl"
+#include "collision.h"
+#include <stdio.h>
+
 
 void gameView::setup()
 {
@@ -19,7 +22,7 @@ void gameView::setup()
 	ufo.setScale(0.02f);
 }
 
-void gameView::draw(renderContext& context)
+void gameView::draw(renderContext& context, GLuint uniColor)
 {
 	if (state.boostingForward || state.boostingBackward)
 	{
@@ -29,7 +32,20 @@ void gameView::draw(renderContext& context)
 	{
 		ship.setShape(&shipCruisingShape);
 	}
-	ship.draw(context);
-	asteroid.draw(context);
-	ufo.draw(context);
+
+	//change color to red when a collision between asteroid and ship occur
+	if (state.collision) {
+		glUniform3f(uniColor, 1.0f, 0.0f, 0.0f);
+		ship.draw(context);
+		asteroid.draw(context);
+		glUniform3f(uniColor, 1.0f, 1.0f, 1.0f);
+		ufo.draw(context);
+	}
+	else
+	{
+		ship.draw(context);
+		asteroid.draw(context);
+		ufo.draw(context);
+	}
+
 }

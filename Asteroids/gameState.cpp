@@ -48,7 +48,7 @@ void gameState::update(float dt)
 
 	ufo.update(dt);
 	ufo.confineTo(area);
-	checkCollision(asteroid.getPos(), ship.getPos());
+	this->collision = checkCollision(asteroid.getPos(), ship.getPos());
 }
 
 // TODO: Move to controller

@@ -13,7 +13,7 @@ public:
 	{}
 
 	void setup();
-	void draw(renderContext& context);
+	void draw(renderContext& context, GLuint uniColor);
 
 private:
 	gameState& state;
