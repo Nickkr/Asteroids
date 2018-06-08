@@ -21,6 +21,7 @@ void gameState::setup()
 // dt float time since last update call
 void gameState::update(float dt)
 {
+	gameTime += dt;
 	ship.getBody()->resetForceAndTorque();
 
 	updateControls();
@@ -51,7 +52,31 @@ void gameState::update(float dt)
 	ufo.getBody()->update(dt);
 	ufo.getBody()->confineTo(area);
 	
-	if (!ship.invincible)
+	if (!ship.isAlive())
+	{
+		if (shipStateTimeStamp == 0)
+		{
+			shipStateTimeStamp = gameTime + respawnTimer;
+		}
+		else if (gameTime > shipStateTimeStamp)
+		{
+			shipStateTimeStamp = 0;
+			ship.respawn();
+		}
+	}
+
+	if (ship.isInvincible())
+	{
+		if (shipStateTimeStamp == 0)
+		{
+			shipStateTimeStamp = gameTime + invincibleAfterSpawnTimer;
+		}
+		else if (gameTime > shipStateTimeStamp)
+		{
+			shipStateTimeStamp = 0;
+			ship.setInvincible(false);
+		}
+	}else
 	{
 		this->collision = checkCollision(asteroid, ship) || checkCollision(ufo, ship);
 	}

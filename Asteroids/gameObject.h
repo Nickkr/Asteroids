@@ -20,8 +20,11 @@ public:
 	void kill() { alive = false;  }
 	void revive() { alive = true; }
 	void respawn();
+	void removeInvincibility();
+
 	bool isAlive() const { return alive;  }
-	bool invincible = false;
+	bool isInvincible() const { return invincible; }
+	void setInvincible(bool value) { invincible = value; }
 
 private:
 	gameObjectType type;
@@ -29,4 +32,5 @@ private:
 	circleShape shape;
 
 	bool alive = true;
+	bool invincible = false;
 };

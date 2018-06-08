@@ -18,7 +18,7 @@ public:
 		build(vertices, N / 2, scale);
 	}
 
-	void draw(renderContext& context, mat4x4 const& transform, bool isAlive) const;
+	void draw(renderContext& context, mat4x4 const& transform, bool invincible) const;
 
 private:
 	float* vertices;

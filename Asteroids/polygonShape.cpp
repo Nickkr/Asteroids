@@ -36,17 +36,17 @@ void polygonShape::build(float* vertices, size_t numVertices, float scale)
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
-void polygonShape::draw(renderContext& context, mat4x4 const& transform, bool isAlive) const
+void polygonShape::draw(renderContext& context, mat4x4 const& transform, bool invincible) const
 {
 	glUniformMatrix4fv(context.modelViewLocation, 1, false, &transform._00);
 	
 	float lineColor[] = { 1.0f, 1.0f, 1.0f };
 
 	//TODO: only ship to be invisible while dead, other objects get deleted
-	if (!isAlive)
+	if (invincible)
 	{
 		lineColor[0] = 0.0f;
-		lineColor[1] = 0.0f;
+		lineColor[1] = 1.0f;
 		lineColor[2] = 0.0f;
 	}
 	glUniform3fv(context.colorLocation, 1, lineColor);

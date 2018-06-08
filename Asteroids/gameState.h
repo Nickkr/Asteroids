@@ -22,6 +22,9 @@ struct gameState
 	
 	bool collision = false;
 
+	float gameTime = 0;
+	float shipStateTimeStamp = 0;
+
 	void setup();
 	void update(float dt);
 	void updateControls();

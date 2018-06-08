@@ -14,15 +14,19 @@ void gameView::setup()
 void gameView::draw(renderContext& context)
 {
 	mat4x4 shipTransform = state.ship.computeTransform();
-	if (state.boostingForward || state.boostingBackward)
+
+	if (state.ship.isAlive())
 	{
-		shipAcceleratingShape.draw(context, shipTransform, state.ship.isAlive() );
-	}
-	else
-	{
-		shipCruisingShape.draw(context, shipTransform, state.ship.isAlive() );
+		if (state.boostingForward || state.boostingBackward)
+		{
+			shipAcceleratingShape.draw(context, shipTransform, state.ship.isInvincible());
+		}
+		else
+		{
+			shipCruisingShape.draw(context, shipTransform, state.ship.isInvincible());
+		}
 	}
 
-	asteroidShape.draw(context, state.asteroid.computeTransform(), state.asteroid.isAlive() );
-	ufoShape.draw(context, state.ufo.computeTransform(), state.ufo.isAlive() );
+	asteroidShape.draw(context, state.asteroid.computeTransform(), state.asteroid.isInvincible());
+	ufoShape.draw(context, state.ufo.computeTransform(), state.ufo.isInvincible());
 }

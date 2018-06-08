@@ -17,8 +17,6 @@ void gameObject::onCollisionWith(gameObject& other)
 			|| other.type == gameObjectType::ufo)
 		{
 			kill();
-			std::thread t(&gameObject::respawn, this);
-			t.detach();
 		}
 	}
 
@@ -34,13 +32,13 @@ void gameObject::onCollisionWith(gameObject& other)
 
 void gameObject::respawn()
 {
-	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	this->revive();
 	this->getBody()->setPos({ 0,0 });
 	this->getBody()->setLinearVelocity({ 0,0 });
 	this->invincible = true;
-	printf("invincible for 0.5 s\n");
-	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+}
+
+void gameObject::removeInvincibility()
+{
 	this->invincible = false;
-	printf("invincibility gone\n");
 }

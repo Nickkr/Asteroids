@@ -7,3 +7,5 @@ const float asteroidTravelHeading = 30 / 180.0f * pi; //30 degrees in radian fly
 const float ufoHeading = 0;
 const bool enableMomentum = false;
 const float gameSpeed = 1;
+const float respawnTimer = 0.5;
+const float invincibleAfterSpawnTimer = 1;
