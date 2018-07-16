@@ -1,6 +1,9 @@
 #include "gameState.h"
 #include "gameSettings.inl"
 #include "collision.h"
+#include <random>
+
+
 
 void gameState::setup()
 {
@@ -8,14 +11,23 @@ void gameState::setup()
 	ship.getBody()->setLinearDamping(0.8f);
 	ship.getBody()->setMaxLinearVelocity(maxLinearVelocity);
 
-	asteroid.getBody()->setAngularVelocity(angularVelocity / 30);
-	vec2 asteroidForwardDirection = { cosf(asteroidTravelHeading), sinf(asteroidTravelHeading) };
-	asteroid.getBody()->setLinearVelocity(asteroidForwardDirection * (maxLinearVelocity / 3));
-	asteroid.getBody()->setPos({ -1, -1 });
+	addAsteroid();
 
 	vec2 ufoForwardDirection = { cosf(ufoHeading), sinf(ufoHeading) };
 	ufo.getBody()->setLinearVelocity(ufoForwardDirection * (maxLinearVelocity / 3));
 	ufo.getBody()->setPos({ -0.9f , 0.5f });
+
+}
+
+void gameState::addAsteroid()
+{
+	asteroidVector.push_back(new gameObject(gameObjectType::asteroid, 0.09f));
+	asteroidVector.back()->getBody()->setAngularVelocity(angularVelocity / 30);
+	float travelHeading =  rand() % 360 / 180.0f * pi; //0-359 degrees in radian fly direction
+	vec2 asteroidForwardDirection = { cosf(travelHeading), sinf(travelHeading) };
+	asteroidVector.back()->getBody()->setLinearVelocity(asteroidForwardDirection * (maxLinearVelocity / 3));
+	asteroidVector.back()->getBody()->setPos(asteroidSpawnCoords[spawnCoordCounter % 4]);
+	++spawnCoordCounter; //next asteroid spawns at next position defined in vector
 }
 
 // dt float time since last update call
@@ -46,8 +58,10 @@ void gameState::update(float dt)
 	}
 	ship.getBody()->confineTo(area);
 
-	asteroid.getBody()->update(dt);
-	asteroid.getBody()->confineTo(area);
+	for (auto it = asteroidVector.begin(); it != asteroidVector.end(); it++) {
+		(*it)->getBody()->update(dt);
+		(*it)->getBody()->confineTo(area);
+	}
 
 	ufo.getBody()->update(dt);
 	ufo.getBody()->confineTo(area);
@@ -78,7 +92,17 @@ void gameState::update(float dt)
 		}
 	}else
 	{
-		this->collision = checkCollision(asteroid, ship) || checkCollision(ufo, ship);
+		this->collision = checkCollision(ufo, ship);
+		if (!this->collision)
+		{
+			for (auto it = asteroidVector.begin(); it != asteroidVector.end(); it++) {
+				if (checkCollision((**it), ship))
+				{
+					this->collision = true;
+					break;
+				}
+			}
+		}
 	}
 }
 

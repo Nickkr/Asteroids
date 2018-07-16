@@ -92,6 +92,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	case GLFW_KEY_SPACE:
 		printf("Keyboard press input: SPACE \n");
 		break;
+	case GLFW_KEY_F1:
+		if(action != GLFW_RELEASE)
+		{
+			state->addAsteroid();
+		}
+		break;
 	default:
 		printf("Keyboard press input: undefined key \n");
 		break;

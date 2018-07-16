@@ -26,7 +26,9 @@ void gameView::draw(renderContext& context)
 			shipCruisingShape.draw(context, shipTransform, state.ship.isInvincible());
 		}
 	}
+	for (auto it = state.asteroidVector.begin(); it != state.asteroidVector.end(); it++) {
+		asteroidShape.draw(context, (*it)->computeTransform(), (*it)->isInvincible());
 
-	asteroidShape.draw(context, state.asteroid.computeTransform(), state.asteroid.isInvincible());
+	}
 	ufoShape.draw(context, state.ufo.computeTransform(), state.ufo.isInvincible());
 }
