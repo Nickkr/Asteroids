@@ -14,7 +14,8 @@ void gameObject::onCollisionWith(gameObject& other)
 	if (this->type == gameObjectType::ship)
 	{
 		if (other.type == gameObjectType::asteroid
-			|| other.type == gameObjectType::ufo)
+			|| other.type == gameObjectType::ufo
+			|| other.type == gameObjectType::ufoBullet)
 		{
 			kill();
 		}

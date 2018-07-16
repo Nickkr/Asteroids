@@ -71,26 +71,30 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	switch (key) {
 	case GLFW_KEY_UP:
 	case GLFW_KEY_W:
-		printf("Keyboard press input: W / UP \n");
+		//printf("Keyboard press input: W / UP \n");
 		state->boostingForward = (action != GLFW_RELEASE);
 		break;
 	case GLFW_KEY_LEFT:
 	case GLFW_KEY_A:
-		printf("Keyboard press input: A / LEFT \n");
+		//printf("Keyboard press input: A / LEFT \n");
 		state->turnLeft = (action != GLFW_RELEASE);
 		break;
 	case GLFW_KEY_DOWN:
 	case GLFW_KEY_S:
-		printf("Keyboard press input: S / DOWN \n");
+		//printf("Keyboard press input: S / DOWN \n");
 		state->boostingBackward = (action != GLFW_RELEASE);
 		break;
 	case GLFW_KEY_RIGHT:
 	case GLFW_KEY_D:
-		printf("Keyboard press input: D/ RIGHT \n");
+		//printf("Keyboard press input: D/ RIGHT \n");
 		state->turnRight = (action != GLFW_RELEASE);
 		break;
 	case GLFW_KEY_SPACE:
-		printf("Keyboard press input: SPACE \n");
+		//printf("Keyboard press input: SPACE \n");
+		if (action != GLFW_RELEASE)
+		{
+			state->shootBullet();
+		}
 		break;
 	case GLFW_KEY_F1:
 		if(action != GLFW_RELEASE)
@@ -99,7 +103,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		break;
 	default:
-		printf("Keyboard press input: undefined key \n");
+		//printf("Keyboard press input: undefined key \n");
 		break;
 	}
 

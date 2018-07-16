@@ -22,4 +22,5 @@ private:
 	polygonShape shipAcceleratingShape;
 	polygonShape asteroidShape;
 	polygonShape ufoShape;
+	polygonShape bulletShape;
 };

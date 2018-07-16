@@ -7,7 +7,8 @@ enum class gameObjectType
 	ship,
 	asteroid,
 	ufo,
-	bullet
+	bullet,
+	ufoBullet
 };
 
 class gameObject : public fixture
@@ -25,6 +26,9 @@ public:
 	bool isAlive() const { return alive;  }
 	bool isInvincible() const { return invincible; }
 	void setInvincible(bool value) { invincible = value; }
+
+	//TODO: replace this
+	bool pointsCounted = false;
 
 private:
 	gameObjectType type;

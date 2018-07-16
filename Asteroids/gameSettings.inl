@@ -9,3 +9,6 @@ const bool enableMomentum = false;
 const float gameSpeed = 1;
 const float respawnTimer = 0.5;
 const float invincibleAfterSpawnTimer = 1;
+const float ufoShootInterval = 0.8f;
+const float asteroidSpawnInterval = 2;
+const float ufoSpawnInterval = 10;

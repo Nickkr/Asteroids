@@ -36,7 +36,7 @@ void polygonShape::build(float* vertices, size_t numVertices, float scale)
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
-void polygonShape::draw(renderContext& context, mat4x4 const& transform, bool invincible) const
+void polygonShape::draw(renderContext& context, mat4x4 const& transform, bool invincible, bool enemyBullet) const
 {
 	glUniformMatrix4fv(context.modelViewLocation, 1, false, &transform._00);
 	
@@ -47,6 +47,12 @@ void polygonShape::draw(renderContext& context, mat4x4 const& transform, bool in
 	{
 		lineColor[0] = 0.0f;
 		lineColor[1] = 1.0f;
+		lineColor[2] = 0.0f;
+	}
+	if (enemyBullet)
+	{
+		lineColor[0] = 1.0f;
+		lineColor[1] = 0.0f;
 		lineColor[2] = 0.0f;
 	}
 	glUniform3fv(context.colorLocation, 1, lineColor);
