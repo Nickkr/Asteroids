@@ -21,12 +21,13 @@ void gameState::setup()
 
 void gameState::addAsteroid()
 {
-	asteroidVector.push_back(new gameObject(gameObjectType::asteroid, 0.09f));
-	asteroidVector.back()->getBody()->setAngularVelocity(angularVelocity / 30);
+	auto asteroid = std::make_unique<gameObject>(gameObjectType::asteroid, 0.09f);
+	asteroid->getBody()->setAngularVelocity(angularVelocity / 30);
 	float travelHeading =  rand() % 360 / 180.0f * pi; //0-359 degrees in radian fly direction
 	vec2 asteroidForwardDirection = { cosf(travelHeading), sinf(travelHeading) };
-	asteroidVector.back()->getBody()->setLinearVelocity(asteroidForwardDirection * (maxLinearVelocity / 3));
-	asteroidVector.back()->getBody()->setPos(asteroidSpawnCoords[spawnCoordCounter % 4]);
+	asteroid->getBody()->setLinearVelocity(asteroidForwardDirection * (maxLinearVelocity / 3));
+	asteroid->getBody()->setPos(asteroidSpawnCoords[spawnCoordCounter % 4]);
+	asteroids.push_back(std::move(asteroid));
 	++spawnCoordCounter; //next asteroid spawns at next position defined in vector
 }
 
@@ -58,9 +59,10 @@ void gameState::update(float dt)
 	}
 	ship.getBody()->confineTo(area);
 
-	for (auto it = asteroidVector.begin(); it != asteroidVector.end(); it++) {
-		(*it)->getBody()->update(dt);
-		(*it)->getBody()->confineTo(area);
+	for (auto& asteroid : asteroids)
+	{
+		asteroid->getBody()->update(dt);
+		asteroid->getBody()->confineTo(area);
 	}
 
 	ufo.getBody()->update(dt);
@@ -90,13 +92,15 @@ void gameState::update(float dt)
 			shipStateTimeStamp = 0;
 			ship.setInvincible(false);
 		}
-	}else
+	}
+	else
 	{
 		this->collision = checkCollision(ufo, ship);
 		if (!this->collision)
 		{
-			for (auto it = asteroidVector.begin(); it != asteroidVector.end(); it++) {
-				if (checkCollision((**it), ship))
+			for (auto& asteroid : asteroids)
+			{
+				if (checkCollision(*asteroid, ship))
 				{
 					this->collision = true;
 					break;

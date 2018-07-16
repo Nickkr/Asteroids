@@ -4,6 +4,7 @@
 #include "gameObject.h"
 #include <math.h>
 #include <vector>
+#include <memory>
 
 static const float pi = acosf(-1.0f);
 
@@ -14,7 +15,7 @@ struct gameState
 	gameObject ship = { gameObjectType::ship, 0.04f };
 	gameObject ufo = { gameObjectType::ufo, 0.04f };
 
-	std::vector<gameObject*> asteroidVector;
+	std::vector<std::unique_ptr<gameObject>> asteroids;
 
 	//asteroid spawn and last spawn coord counter
 	std::vector<vec2> asteroidSpawnCoords = { {0,-1}, {-1,0}, {0,1}, {1,0} };
