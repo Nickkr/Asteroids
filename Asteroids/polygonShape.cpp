@@ -42,14 +42,13 @@ void polygonShape::draw(renderContext& context, mat4x4 const& transform, bool in
 	
 	float lineColor[] = { 1.0f, 1.0f, 1.0f };
 
-	//TODO: only ship to be invisible while dead, other objects get deleted
 	if (invincible)
 	{
 		lineColor[0] = 0.0f;
 		lineColor[1] = 1.0f;
 		lineColor[2] = 0.0f;
 	}
-	if (enemyBullet)
+	else if (enemyBullet)
 	{
 		lineColor[0] = 1.0f;
 		lineColor[1] = 0.0f;

@@ -18,8 +18,7 @@ public:
 		build(vertices, N / 2, scale);
 	}
 
-	//TODO: fix draw function color mode
-	void draw(renderContext& context, mat4x4 const& transform, bool invincible, bool enemyBullet = false) const;
+	void draw(renderContext& context, mat4x4 const& transform, bool invincible = false, bool enemyBullet = false) const;
 
 private:
 	float* vertices;

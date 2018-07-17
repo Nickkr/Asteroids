@@ -45,4 +45,5 @@ struct gameState
 	void addAsteroid();
 	void shootBullet();
 	void ufoAttack();
+	void eraseOutOfRange(std::vector<std::unique_ptr<gameObject>>& objects);
 };

@@ -27,9 +27,6 @@ public:
 	bool isInvincible() const { return invincible; }
 	void setInvincible(bool value) { invincible = value; }
 
-	//TODO: replace this
-	bool pointsCounted = false;
-
 private:
 	gameObjectType type;
 	rigidBody body;

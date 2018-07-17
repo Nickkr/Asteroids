@@ -2,6 +2,7 @@
 #include "gameSettings.inl"
 #include "collision.h"
 #include <random>
+#include <algorithm>
 
 
 
@@ -28,7 +29,7 @@ void gameState::shootBullet()
 {
 	if (ship.isAlive())
 	{
-		auto bullet = std::make_unique<gameObject>(gameObjectType::bullet, 0.005f);
+		auto bullet = std::make_unique<gameObject>(gameObjectType::bullet, 0.003f);
 		float travelHeading = ship.getBody()->getAngle();
 		vec2 shipForwardDirection = { cosf(travelHeading), sinf(travelHeading) };
 		bullet->getBody()->setLinearVelocity(shipForwardDirection * maxLinearVelocity * 2);
@@ -39,7 +40,7 @@ void gameState::shootBullet()
 
 void gameState::ufoAttack()
 {
-	auto ufoBullet = std::make_unique<gameObject>(gameObjectType::ufoBullet, 0.005f);
+	auto ufoBullet = std::make_unique<gameObject>(gameObjectType::ufoBullet, 0.003f);
 	float travelHeading = rand() % 360 / 180.0f * pi;
 	vec2 ufoForwardDirection = { cosf(travelHeading), sinf(travelHeading) };
 	ufoBullet->getBody()->setLinearVelocity(ufoForwardDirection * (maxLinearVelocity / 2));
@@ -93,40 +94,28 @@ void gameState::update(float dt)
 		asteroid->getBody()->confineTo(area);
 	}
 
-	
+	eraseOutOfRange(bullets);
+	eraseOutOfRange(ufoBullets);
+
 	for (auto& bullet : bullets)
 	{
 		bullet->getBody()->update(dt);
-		if (bullet->getBody()->getPos().x > 1 ||
-			bullet->getBody()->getPos().x < 0 ||
-			bullet->getBody()->getPos().y > 1 ||
-			bullet->getBody()->getPos().y < 0)
-		{
-			//TODO:ERASE BULLET
-		}
 	}
-
 
 	for (auto& ufoBullet : ufoBullets)
 	{
 		ufoBullet->getBody()->update(dt);
-		if (ufoBullet->getBody()->getPos().x > 1 ||
-			ufoBullet->getBody()->getPos().x < 0 ||
-			ufoBullet->getBody()->getPos().y > 1 ||
-			ufoBullet->getBody()->getPos().y < 0)
-		{
-			//TODO:ERASE ufobullet
-		}
 	}
 
 	ufo.getBody()->update(dt);
 	ufo.getBody()->confineTo(area);
 
+
 	if (!ufo.isAlive() && gameTime > (ufoKilledTime + ufoSpawnInterval))
 	{
 		vec2 currentUfoPos = ufo.getBody()->getPos();
 		//UFO respawns on the left edge with a random y axis between -1 and 1
-		ufo.getBody()->setPos({ -1, (rand() / ((float)RAND_MAX)- (float)(RAND_MAX / 2)) });
+		ufo.getBody()->setPos({ -1, (rand() / ((float)RAND_MAX) - (float)(RAND_MAX / 2)) });
 		ufo.revive();
 	}
 
@@ -142,13 +131,16 @@ void gameState::update(float dt)
 			ship.respawn();
 		}
 	}
-	if (ufo.isAlive() && (gameTime > (lastUfoBulletTime + ufoShootInterval)))
+
+	float gameDifficultyAdjustment = std::pow(0.9f, (playerScore / 1000));
+
+	if (ufo.isAlive() && (gameTime > (lastUfoBulletTime + ufoShootInterval * gameDifficultyAdjustment)))
 	{
 		ufoAttack();
 		lastUfoBulletTime = gameTime;
 	}
 
-	if (gameTime > (lastAsteroidSpawn + asteroidSpawnInterval))
+	if (gameTime > (lastAsteroidSpawn + asteroidSpawnInterval * gameDifficultyAdjustment))
 	{
 		addAsteroid();
 		lastAsteroidSpawn = gameTime;
@@ -195,27 +187,30 @@ void gameState::update(float dt)
 	//check collision between bullets fired from ship and asteroids, ufo
 	for (auto& bullet : bullets)
 	{
-		if (checkCollision(*bullet, ufo))
+		if (ufo.isAlive() && checkCollision(*bullet, ufo))
 		{
-			if(!ufo.pointsCounted)
-			{
-				playerScore += 50;
-				ufo.pointsCounted = true;
-			}
+			playerScore += 50;
 			ufoKilledTime = gameTime;
 		}
 		for (auto& asteroid : asteroids)
 		{
-			if (checkCollision(*bullet, *asteroid))
+			if (asteroid->isAlive() && checkCollision(*bullet, *asteroid))
 			{
-				if (!asteroid->pointsCounted)
-				{
-					playerScore += 30;
-					asteroid->pointsCounted = true;
-				}
+				playerScore += 30;
 			}
 		}
 	}
+}
+
+void gameState::eraseOutOfRange(std::vector<std::unique_ptr<gameObject>>& objects)
+{
+	objects.erase(std::remove_if(objects.begin(), objects.end(), [](auto&& object)
+	{
+		return object->getBody()->getPos().x > 1
+			|| object->getBody()->getPos().x < -1
+			|| object->getBody()->getPos().y > 1
+			|| object->getBody()->getPos().y < -1;
+	}), objects.end());
 }
 
 // TODO: Move to controller
