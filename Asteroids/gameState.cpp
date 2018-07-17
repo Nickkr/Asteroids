@@ -90,6 +90,7 @@ void gameState::update(float dt)
 		asteroid->getBody()->confineTo(area);
 	}
 
+	
 	for (auto& bullet : bullets)
 	{
 		bullet->getBody()->update(dt);
@@ -120,6 +121,9 @@ void gameState::update(float dt)
 
 	if (!ufo.isAlive() && gameTime > (ufoKilledTime + ufoSpawnInterval))
 	{
+		vec2 currentUfoPos = ufo.getBody()->getPos();
+		//UFO respawns on the left edge with a random y axis between -1 and 1
+		ufo.getBody()->setPos({ -1, (rand() / ((float)RAND_MAX)- (float)(RAND_MAX / 2)) });
 		ufo.revive();
 	}
 
