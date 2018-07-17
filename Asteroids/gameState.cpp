@@ -26,12 +26,15 @@ void gameState::spawnUfo()
 
 void gameState::shootBullet()
 {
-	auto bullet = std::make_unique<gameObject>(gameObjectType::bullet, 0.005f);
-	float travelHeading = ship.getBody()->getAngle();
-	vec2 shipForwardDirection = { cosf(travelHeading), sinf(travelHeading) };
-	bullet->getBody()->setLinearVelocity(shipForwardDirection * maxLinearVelocity);
-	bullet->getBody()->setPos(ship.getBody()->getPos());
-	bullets.push_back(std::move(bullet));
+	if (ship.isAlive())
+	{
+		auto bullet = std::make_unique<gameObject>(gameObjectType::bullet, 0.005f);
+		float travelHeading = ship.getBody()->getAngle();
+		vec2 shipForwardDirection = { cosf(travelHeading), sinf(travelHeading) };
+		bullet->getBody()->setLinearVelocity(shipForwardDirection * maxLinearVelocity * 2);
+		bullet->getBody()->setPos(ship.getBody()->getPos());
+		bullets.push_back(std::move(bullet));
+	}
 }
 
 void gameState::ufoAttack()
@@ -39,7 +42,7 @@ void gameState::ufoAttack()
 	auto ufoBullet = std::make_unique<gameObject>(gameObjectType::ufoBullet, 0.005f);
 	float travelHeading = rand() % 360 / 180.0f * pi;
 	vec2 ufoForwardDirection = { cosf(travelHeading), sinf(travelHeading) };
-	ufoBullet->getBody()->setLinearVelocity(ufoForwardDirection * (maxLinearVelocity / 3));
+	ufoBullet->getBody()->setLinearVelocity(ufoForwardDirection * (maxLinearVelocity / 2));
 	ufoBullet->getBody()->setPos(ufo.getBody()->getPos());
 	ufoBullets.push_back(std::move(ufoBullet));
 }

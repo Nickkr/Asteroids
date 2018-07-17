@@ -153,6 +153,7 @@
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="digitShapes.inl" />
     <None Include="gameSettings.inl" />
     <None Include="polygonShapes.inl" />
   </ItemGroup>
