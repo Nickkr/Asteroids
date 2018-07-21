@@ -181,10 +181,6 @@ void gameState::update(float dt)
 				break;
 			}
 		}
-		if (this->collision)
-		{
-			printf("ship life = %d \n", ship.objectLife);
-		}
 		if (ship.objectLife <= 0)
 		{
 			restartGame();

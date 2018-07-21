@@ -97,17 +97,21 @@ void gameView::drawLife(renderContext& context)
 	float posx = 0.82f;
 	float posy = 0.82f;
 	float scale = 0.05f;
-	float margin = 0.02f;
+	float margin = 0.01f;
 
 	int life = state.ship.objectLife;
 	float fontScale = 0.8;
 	mat4x4 transform = { 0 };
-	transform._00 = fontScale;
-	transform._11 = fontScale;
+	transform._00 = 0;
+	transform._11 = 0;
 	transform._22 = fontScale;
 	transform._33 = 1;
 	transform._03 = posx;
 	transform._13 = posy;
+	transform._01 = -fontScale;
+	transform._10 = fontScale;
+
+
 	for (int i = 0; i < life; ++i) {
 		shipCruisingShape.draw(context, transform, false, true); //draw ship life in red
 		transform._03 -= scale + margin;

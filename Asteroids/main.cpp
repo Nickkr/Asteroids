@@ -46,7 +46,8 @@ void shaderCompileCheck(GLuint shader)
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 	if (status != GL_TRUE)
 	{
-		printf("failed to compile shader");
+		
+		("failed to compile shader");
 	}
 }
 
@@ -91,19 +92,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	case GLFW_KEY_SPACE:
 		//printf("Keyboard press input: SPACE \n");
-		if (action != GLFW_RELEASE)
+		if (action == GLFW_PRESS)
 		{
 			state->shootBullet();
 		}
 		break;
 	case GLFW_KEY_F1:
-		if(action != GLFW_RELEASE)
+		if(action == GLFW_PRESS)
 		{
 			state->addAsteroid();
 		}
 		break;
 	default:
-		//printf("Keyboard press input: undefined key \n");
+		printf("Keyboard press input: undefined key \n");
 		break;
 	}
 
