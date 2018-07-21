@@ -72,7 +72,7 @@ void gameView::drawScore(renderContext& context)
 	float posx = 0.9f;
 	float posy = 0.9f;
 	float scale = 0.05f;
-	float margin = 0.02f;
+	float margin = 0.005f;
 
 	const polygonShape* digitShapes[] = { &zeroShape, &oneShape, &twoShape, &threeShape,
 		&fourShape, &fiveShape, &sixShape, &sevenShape, &eightShape, &nineShape };
@@ -94,8 +94,8 @@ void gameView::drawScore(renderContext& context)
 
 void gameView::drawLife(renderContext& context)
 {
-	float posx = 0.8f;
-	float posy = 0.8f;
+	float posx = 0.82f;
+	float posy = 0.82f;
 	float scale = 0.05f;
 	float margin = 0.02f;
 
