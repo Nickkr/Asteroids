@@ -19,6 +19,7 @@ private:
 	gameState& state;
 
 	void drawScore(renderContext& context);
+	void drawLife(renderContext& context);
 
 	polygonShape shipCruisingShape;
 	polygonShape shipAcceleratingShape;
@@ -36,4 +37,6 @@ private:
 	polygonShape sevenShape;
 	polygonShape eightShape;
 	polygonShape nineShape;
+
+	polygonShape shipLifeShape;
 };

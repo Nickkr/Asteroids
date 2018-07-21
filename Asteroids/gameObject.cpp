@@ -11,12 +11,13 @@ gameObject::gameObject(gameObjectType type, float radius)
 
 void gameObject::onCollisionWith(gameObject& other)
 {
-	if (this->type == gameObjectType::ship)
+	if (this->type == gameObjectType::ship && this->isAlive()) //check if alive because ship doesnt get deleted after dying
 	{
 		if (other.type == gameObjectType::asteroid
 			|| other.type == gameObjectType::ufo
 			|| other.type == gameObjectType::ufoBullet)
 		{
+			--objectLife;
 			kill();
 		}
 	}

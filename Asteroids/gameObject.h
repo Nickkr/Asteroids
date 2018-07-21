@@ -18,6 +18,7 @@ public:
 
 	void onCollisionWith(gameObject& other);
 
+	int objectLife = 3;
 	void kill() { alive = false;  }
 	void revive() { alive = true; }
 	void respawn();

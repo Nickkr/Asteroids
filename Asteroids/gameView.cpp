@@ -22,6 +22,8 @@ void gameView::setup()
 	sevenShape.build(sevenVertices, 0.01f);
 	eightShape.build(eightVertices, 0.01f);
 	nineShape.build(nineVertices, 0.01f);
+
+	shipLifeShape.build(shipCruisingVertices, 0.8f);
 }
 
 void gameView::draw(renderContext& context)
@@ -62,6 +64,7 @@ void gameView::draw(renderContext& context)
 	}
 
 	drawScore(context);
+	drawLife(context);
 }
 
 void gameView::drawScore(renderContext& context)
@@ -86,5 +89,27 @@ void gameView::drawScore(renderContext& context)
 		int digit = value % 10; value /= 10;
 		digitShapes[digit]->draw(context, transform, false);
 		transform._03 -= scale + margin; 
+	}
+}
+
+void gameView::drawLife(renderContext& context)
+{
+	float posx = 0.8f;
+	float posy = 0.8f;
+	float scale = 0.05f;
+	float margin = 0.02f;
+
+	int life = state.ship.objectLife;
+	float fontScale = 0.8;
+	mat4x4 transform = { 0 };
+	transform._00 = fontScale;
+	transform._11 = fontScale;
+	transform._22 = fontScale;
+	transform._33 = 1;
+	transform._03 = posx;
+	transform._13 = posy;
+	for (int i = 0; i < life; ++i) {
+		shipCruisingShape.draw(context, transform, false, true); //draw ship life in red
+		transform._03 -= scale + margin;
 	}
 }

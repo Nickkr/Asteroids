@@ -39,6 +39,7 @@ struct gameState
 	float ufoKilledTime = 0;
 
 	void setup();
+	void restartGame();
 	void spawnUfo();
 	void update(float dt);
 	void updateControls();
@@ -46,4 +47,5 @@ struct gameState
 	void shootBullet();
 	void ufoAttack();
 	void eraseOutOfRange(std::vector<std::unique_ptr<gameObject>>& objects);
+	void eraseObjects(std::vector<std::unique_ptr<gameObject>>& objects);
 };

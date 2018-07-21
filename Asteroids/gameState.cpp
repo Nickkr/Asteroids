@@ -161,7 +161,10 @@ void gameState::update(float dt)
 	else
 		//check collision between ship and ufobullets, ufo, asteroid game objects
 	{
-		this->collision = (ufo.isAlive() && checkCollision(ufo, ship)); //checkcollision is only called if ufo is alive
+		if (ufo.isAlive() && checkCollision(ufo, ship))//checkcollision is only called if ufo is alive
+		{
+			this->collision = true;
+		}
 		for (auto& asteroid : asteroids)
 		{
 			if (asteroid->isAlive() && checkCollision(*asteroid, ship))
@@ -180,7 +183,11 @@ void gameState::update(float dt)
 		}
 		if (this->collision)
 		{
-			printf("Player score: %d \n", playerScore);
+			printf("ship life = %d \n", ship.objectLife);
+		}
+		if (ship.objectLife <= 0)
+		{
+			restartGame();
 		}
 
 	}
@@ -213,6 +220,14 @@ void gameState::eraseOutOfRange(std::vector<std::unique_ptr<gameObject>>& object
 	}), objects.end());
 }
 
+void gameState::eraseObjects(std::vector<std::unique_ptr<gameObject>>& objects)
+{
+	objects.erase(std::remove_if(objects.begin(), objects.end(), [](auto&& object)
+	{
+		return true;
+	}), objects.end());
+}
+
 // TODO: Move to controller
 void gameState::updateControls()
 {
@@ -241,4 +256,34 @@ void gameState::updateControls()
 
 	ship.getBody()->applyForce(shipForce);
 	ship.getBody()->setAngularVelocity(shipAngularVelocity);
+}
+
+void gameState::restartGame()
+{
+	//delete all game objects
+	eraseObjects(asteroids);
+	eraseObjects(bullets);
+	eraseObjects(ufoBullets);
+
+	//TODO: make ufo and ship vector
+	
+	//reset UFO position and life
+	ufo.getBody()->setPos({ -1, (rand() / ((float)RAND_MAX) - (float)(RAND_MAX / 2)) });
+	ufo.revive();
+
+	//reset ship position and life
+	ship.respawn();
+	ship.objectLife = 3;
+
+	//reset player score
+	playerScore = 0;
+
+	//reset game time
+	gameTime = 0;
+
+	//reset last ufo bullet and asteroid spawn time
+	lastUfoBulletTime = 0;
+	lastAsteroidSpawn = 0;
+
+	addAsteroid(); //add the initial asteroid
 }
